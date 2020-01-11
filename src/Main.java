@@ -6,10 +6,11 @@ import enumuri.CategoriePublicatie;
 import java.time.LocalDate;
 
 public class Main {
-    static Biblioteca biblioteca = new Biblioteca();
-
+   private static Biblioteca biblioteca;      //pentru a putea utiliza biblioteca in metoda main(), am definit obiectul in clasa Main, ci nu in metoda  getBibliotecaPopulata().
+                                        // l-am facut static deoarece in metodele statice pot fi utilizate doar variabile statica.
     private static Biblioteca getBibliotecaPopulata() {
-        biblioteca.adaugaPublicatie(new Carte("Jonathan Coe", "Casa somnului", 1997, CategoriePublicatie.FICTIUNE.toString()));
+        biblioteca = new Biblioteca();
+        biblioteca.adaugaPublicatie(new Carte("Jonathan Coe", "Casa somnului", 1997, CategoriePublicatie.FICTIUNE.toString())); // utilizam .toString() pentru a introduce un Enum intr-un String (cosntructorul nostru are String categorie in constructor )
         biblioteca.adaugaPublicatie(new Carte("Anna Gavalda", "Impreuna", 2004, CategoriePublicatie.FICTIUNE.toString()));
         biblioteca.adaugaPublicatie(new Articol("Pavel Carol", "Scurta istorie a macaroanelor", CategoriePublicatie.STIINTA.toString(), "Good Food", LocalDate.of(2011,10, 3)));
         biblioteca.adaugaPublicatie(new Articol("John Meyer", "Internetul in mileniul 3", CategoriePublicatie.STIINTA.toString(), "The Scientist", LocalDate.of(1999,12, 1)));
@@ -34,22 +35,17 @@ public class Main {
     public static void main(String[] args) throws Exception {
         getBibliotecaPopulata();
 
-        //CAZUL 1
+        System.out.println("CAZUL 1:");
         biblioteca.catalogPublicatii();
         biblioteca.imprumutaPublicatie(3, LocalDate.of(2017, 12, 20));
         biblioteca.returneazaPublicatie(3, LocalDate.of(2018, 1, 3));
 
-        System.out.println();
-        //CAZUL 2
+        System.out.println("\nCAZUL 2:");
         biblioteca.imprumutaPublicatie(3, LocalDate.of(2017, 12, 20));
         biblioteca.publicatiiImprumutate();
         biblioteca.returneazaPublicatie(4, LocalDate.of(2018, 1, 3));
 
-
-        biblioteca.returneazaPublicatie(3, LocalDate.of(2018, 1, 3));
-        System.out.println();
-
-        //CAZUL 3
+        System.out.println("\nCAZUL 3:");
         LocalDate data = LocalDate.of(2017, 11, 1);
         biblioteca.imprumutaPublicatie(1, data);
         biblioteca.imprumutaPublicatie(2, data);
@@ -58,5 +54,49 @@ public class Main {
         biblioteca.imprumutaPublicatie(5, data);
         biblioteca.publicatiiDisponibile();
 
+        //returnam publicatiile imprumutate, altfel vor fi afisate la apelarea metodei "biblioteca.publicatiiImprumutate();"
+        System.out.println();
+        for(int i=1; i<6; i++)
+            biblioteca.returneazaPublicatie(i, data);
+
+        System.out.println("\nCAZUL 4:");
+        biblioteca.imprumutaPublicatie(3, LocalDate.of(2017, 12, 1));
+        biblioteca.publicatiiImprumutate();
+        biblioteca.returneazaPublicatie(3, LocalDate.of(2018, 2, 2));
+
+        System.out.println("\nCAZUL 5:");
+        biblioteca.consultarePublicatieDupaCategorie(CategoriePublicatie.FICTIUNE.toString());
+        biblioteca.imprumutaPublicatie(2, LocalDate.now());
+        biblioteca.imprumutaPublicatie(2, LocalDate.now());
+
+        System.out.println("\nCAZUL 6:");
+        biblioteca.consultarePublicatieDupaAutor("Neagu Djuvara");
+        biblioteca.imprumutaPublicatie(10, LocalDate.now());
+        biblioteca.returneazaPublicatie(11, LocalDate.now());
+
+        //La zacul 2 a fost imprumutata publicatia 2 cu data de azi si trebuie sa o returnam si sa o imprumutam cu o alta data pentru a putea depasi termenul
+        System.out.println("\n\n");
+        biblioteca.returneazaPublicatie(2, LocalDate.of(2017, 6, 1));
+        biblioteca.imprumutaPublicatie(2, LocalDate.of(2017, 11, 3));
+        System.out.println("\nCAZUL 7:");
+
+        biblioteca.imprumutaPublicatie(1, LocalDate.of(2017, 12, 10));
+        biblioteca.returneazaPublicatie(1, LocalDate.of(2017, 1, 3));
+        biblioteca.imprumutaPublicatie(2, LocalDate.of(2018, 1, 1));
+
+        System.out.println("\nCAZUL 8:");
+        biblioteca.catalogMedia();
+        biblioteca.consultaMedia(10);
+        biblioteca.elibereazaMedia(10);
+
+        System.out.println("\nCAZUL 9:");
+        biblioteca.consultaMedia(20);
+        biblioteca.elibereazaMedia(21);
+
+        System.out.println("\nCAZUL 10:");
+        biblioteca.consultaMedia(14);
+        biblioteca.elibereazaMedia(15);
+        biblioteca.consultaMedia(16);
+        biblioteca.elibereazaMedia(16);
     }
 }
